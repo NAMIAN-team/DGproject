@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Player/BaseCharacterMovementComponent.h"
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
@@ -65,7 +66,7 @@ void ABaseCharacter::MoveForward(float Axis)
 {
 	if (Axis == 0.0f) return;
 
-	const FVector ForwardVector = FVector(0.0, 0.0, GetControlRotation().Yaw).ForwardVector;
+	const FVector ForwardVector = UKismetMathLibrary::GetForwardVector(FRotator(0.0, GetControlRotation().Yaw, 0.0));
 
 	AddMovementInput(ForwardVector, Axis);
 }
@@ -75,7 +76,7 @@ void ABaseCharacter::MoveRight(float Axis)
 	if (Axis == 0.0f) return;
 
 	const FRotator ControlRotation = GetControlRotation();
-	const FVector RightVector = FVector(ControlRotation.Roll, 0.0, Rotatation.Yaw).RightVector;
+	const FVector RightVector = UKismetMathLibrary::GetRightVector(FRotator(0.0, ControlRotation.Yaw, ControlRotation.Roll));
 
 	AddMovementInput(RightVector, Axis);
 }
