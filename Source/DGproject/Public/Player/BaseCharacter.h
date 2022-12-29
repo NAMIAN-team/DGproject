@@ -25,6 +25,12 @@ public:
 	UCameraComponent* PlayerCamera;
 
 protected:
+#pragma region Settings
+	UPROPERTY(EditDefaultsOnly, Category = "Settings|Input")
+	float MinClampAxis = 0.4f;
+#pragma endregion
+
+protected:
 	UPROPERTY()
 	TObjectPtr<UBaseCharacterMovementComponent> MyCharacterMovementComponent;
 

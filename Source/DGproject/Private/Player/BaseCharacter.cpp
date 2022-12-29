@@ -6,7 +6,11 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/InputComponent.h"
 #include "Player/BaseCharacterMovementComponent.h"
+
+#include "Library/DGMathLibrary.h"
+
 
 ABaseCharacter::ABaseCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UBaseCharacterMovementComponent>(CharacterMovementComponentName))
@@ -42,7 +46,7 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ABaseCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ABaseCharacter::MoveRight);
-
+	
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ABaseCharacter::SprintPressedInput);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ABaseCharacter::SprintReleasedInput);
 
@@ -66,6 +70,7 @@ void ABaseCharacter::MoveForward(float Axis)
 {
 	if (Axis == 0.0f) return;
 
+	Axis = UDGMathLibrary::ClampJoystickAxis(Axis, MinClampAxis, 1.0);
 	const FVector ForwardVector = UKismetMathLibrary::GetForwardVector(FRotator(0.0, GetControlRotation().Yaw, 0.0));
 
 	AddMovementInput(ForwardVector, Axis);
@@ -74,6 +79,8 @@ void ABaseCharacter::MoveForward(float Axis)
 void ABaseCharacter::MoveRight(float Axis)
 {
 	if (Axis == 0.0f) return;
+
+	Axis = UDGMathLibrary::ClampJoystickAxis(Axis, MinClampAxis, 1.0);
 
 	const FRotator ControlRotation = GetControlRotation();
 	const FVector RightVector = UKismetMathLibrary::GetRightVector(FRotator(0.0, ControlRotation.Yaw, ControlRotation.Roll));
